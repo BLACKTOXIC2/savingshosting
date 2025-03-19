@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Savingshosting</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            min-height: 100vh;
+            color: #1a1a1a;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 10%;
+            background: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .logo {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-decoration: none;
+            color: #000;
+        }
+
+        .logo .top-text {
+            font-size: 0.9rem;
+            color: #4169E1;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .logo .brand-name {
+            font-weight: bold;
+            font-size: 2rem;
+            color: #4169E1;
+            position: relative;
+        }
+
+        .lightning-icon {
+            color: #ffa500;
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: inline-block;
+            transform: rotate(20deg);
+        }
+
+        .sign-up-btn {
+            background: #4169E1;
+            color: white;
+            padding: 0.7rem 1.8rem;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .sign-up-btn:hover {
+            background: #3457c9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(65, 105, 225, 0.3);
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* Enhanced Chat UI */
+        .chat-section {
+            margin-bottom: 3rem;
+        }
+        
+        .chat-container {
+            background: linear-gradient(135deg, #5b6eea, #4e96ff);
+            padding: 2rem;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(65, 105, 225, 0.2);
+        }
+
+        .chat-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 80% 10%, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 50%);
+        }
+
+        .chat-header {
+            color: white;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .chat-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .chat-header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .chat-window {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: 360px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .chat-messages {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            padding: 0.75rem 1.2rem;
+            border-radius: 18px;
+            max-width: 80%;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            position: relative;
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            margin-top: 0.3rem;
+            display: inline-block;
+        }
+
+        .user-message {
+            background: #e9f0ff;
+            color: #333;
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+            align-self: flex-end;
+        }
+
+        .system-message {
+            background: #f5f5f5;
+            color: #444;
+            border-bottom-left-radius: 4px;
+            align-self: flex-start;
+        }
+
+        .chat-input-container {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-top: 1px solid #eee;
+            background: #f9f9f9;
+        }
+
+        #message-input {
+            flex-grow: 1;
+            padding: 0.9rem 1.2rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            background: white;
+            color: #333;
+            transition: all 0.3s;
+        }
+
+        #message-input:focus {
+            outline: none;
+            border-color: #4169E1;
+            box-shadow: 0 0 0 2px rgba(65, 105, 225, 0.2);
+        }
+
+        #message-input::placeholder {
+            color: #aab;
+        }
+
+        #send-button {
+            background: #4169E1;
+            color: white;
+            width: 46px;
+            height: 46px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            margin-left: 0.8rem;
+            box-shadow: 0 3px 10px rgba(65, 105, 225, 0.2);
+        }
+
+        #send-button:hover {
+            background: #3457c9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(65, 105, 225, 0.3);
+        }
+
+        .send-icon {
+            transform: rotate(45deg);
+            font-size: 1.2rem;
+        }
+
+        /* Typing indicator */
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background: #f5f5f5;
+            border-radius: 18px;
+            margin-bottom: 1rem;
+            max-width: fit-content;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .typing-indicator.active {
+            display: flex;
+        }
+
+        .typing-dots {
+            display: flex;
+            margin-left: 0.5rem;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #666;
+            margin-right: 3px;
+            animation: typingAnimation 1.5s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.6s;
+            margin-right: 0;
+        }
+
+        @keyframes typingAnimation {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        /* Featured brands section */
+        .featured-brands {
+            margin-top: 4rem;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        .featured-brands h2 {
+            font-size: 1.6rem;
+            color: #333;
+            margin-bottom: 2rem;
+            position: relative;
+            padding-left: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .featured-brands h2::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: #4169E1;
+            border-radius: 2px;
+        }
+
+        .brands-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+        }
+
+        .brand-card {
+            background: #fcfcfc;
+            padding: 2rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            transition: all 0.3s ease;
+            height: 130px;
+            border: 1px solid #f0f0f0;
+        }
+
+        .brand-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.08);
+            border-color: #e0e0e0;
+        }
+
+        .brand-card img {
+            max-width: 80%;
+            max-height: 60px;
+            height: auto;
+            transition: all 0.3s;
+        }
+
+        .brand-card:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Media query for responsive design */
+        @media (max-width: 768px) {
+            .brands-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .header {
+                padding: 1rem 5%;
+            }
+            
+            .chat-header h2 {
+                font-size: 1.5rem;
+            }
+            
+            .chat-window {
+                height: 320px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .brands-grid {
+                grid-template-columns: repeat(1, 1fr);
+            }
+            
+            .header {
+                padding: 0.8rem 1rem;
+            }
+            
+            .logo .brand-name {
+                font-size: 1.5rem;
+            }
+            
+            .chat-window {
+                height: 300px;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+            
+            #message-input {
+                padding: 0.8rem 1rem;
+            }
+            
+            #send-button {
+                width: 40px;
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="#" class="logo">
+            <span class="top-text">Savings</span>
+            <span class="brand-name">Savingshosting<span class="lightning-icon">⚡</span></span>
+        </a>
+        <button class="sign-up-btn">Sign Up</button>
+    </header>
+
+    <main class="main-content">
+        <section class="chat-section">
+            <div class="chat-container">
+                <div class="chat-header">
+                    <h2>How can we help you today?</h2>
+                    <p>Our support team is online and ready to assist</p>
+                </div>
+                
+                <div class="chat-window">
+                    <div class="chat-messages" id="chat-messages">
+                        <!-- Messages will be added here dynamically -->
+                    </div>
+                    
+                    <div class="typing-indicator" id="typing-indicator">
+                        <span>Support agent is typing</span>
+                        <div class="typing-dots">
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-input-container">
+                        <input type="text" id="message-input" placeholder="Type your message here...">
+                        <button type="button" id="send-button">
+                            <span class="send-icon">&#10132;</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="featured-brands">
+            <h2>Featured Brands</h2>
+            <div class="brands-grid">
+                <div class="brand-card">
+                    <img src="https://ucarecdn.com/8162b8ae-b2b4-4f24-9856-5b3402390996/-/preview/1000x562/" alt="Linode">
+                </div>
+                <div class="brand-card">
+                    <img src="https://ucarecdn.com/f54914c2-7c71-479b-8e9c-2b554ad1f829/-/preview/416x274/" alt="AWS">
+                </div>
+                <div class="brand-card">
+                    <img src="https://assets.hostinger.com/images/logo-homepage2020-f9c79137d7.svg" alt="Hostinger">
+                </div>
+                <div class="brand-card">
+                    <img src="https://ucarecdn.com/5e7208e4-52d7-4374-92ba-9f091efb240c/-/preview/1000x562/" alt="Bluehost">
+                </div>
+                <div class="brand-card">
+                    <img src="https://ucarecdn.com/fb8192e1-7c52-43ad-9bdc-d5e47736874a/-/preview/1000x562/" alt="GoDaddy">
+                </div>
+                <div class="brand-card">
+                    <img src="https://ucarecdn.com/43e9e2d9-97d8-4815-9ea9-e31bbbd78b66/-/preview/1000x535/" alt="HostGator">
+                </div>
+                <div class="brand-card">
+                    <img src="https://ucarecdn.com/815b131f-10ce-4830-a308-522dc83959c8/-/preview/1000x562/" alt="Cloudways">
+                </div>
+                <div class="brand-card">
+                    <img src="https://ucarecdn.com/87f68324-8ab1-4def-b0c9-e6d66a5415c3/-/preview/810x456/" alt="DigitalOcean">
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const socket = io();
+            const messageInput = document.getElementById('message-input');
+            const sendButton = document.getElementById('send-button');
+            const chatMessages = document.getElementById('chat-messages');
+            const typingIndicator = document.getElementById('typing-indicator');
+            
+            // Add connection status handling
+            socket.on('connect', () => {
+                console.log('Connected to server');
+                messageInput.disabled = false;
+                sendButton.disabled = false;
+            });
+
+            socket.on('disconnect', () => {
+                console.log('Disconnected from server');
+                messageInput.disabled = true;
+                sendButton.disabled = true;
+                addMessage('Connection lost. Attempting to reconnect...', false);
+            });
+
+            socket.on('connect_error', (error) => {
+                console.error('Connection error:', error);
+                addMessage('Unable to connect to server. Please check your connection.', false);
+            });
+
+            // Focus on the input field when the page loads
+            messageInput.focus();
+            
+            // Function to get current time in HH:MM format
+            function getCurrentTime() {
+                const now = new Date();
+                let hours = now.getHours();
+                let minutes = now.getMinutes();
+                
+                // Pad with leading zero if needed
+                hours = hours < 10 ? '0' + hours : hours;
+                minutes = minutes < 10 ? '0' + minutes : minutes;
+                
+                return `${hours}:${minutes}`;
+            }
+            
+            // Function to add a message to the chat
+            function addMessage(text, isUser = true) {
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message');
+                messageElement.classList.add(isUser ? 'user-message' : 'system-message');
+                
+                const messageText = document.createElement('div');
+                messageText.textContent = text;
+                messageElement.appendChild(messageText);
+                
+                const timeElement = document.createElement('span');
+                timeElement.classList.add('message-time');
+                timeElement.textContent = getCurrentTime();
+                messageElement.appendChild(timeElement);
+                
+                chatMessages.appendChild(messageElement);
+                
+                // Scroll to the bottom of the chat
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // Function to handle sending a message
+            function sendMessage() {
+                const message = messageInput.value.trim();
+                if (message) {
+                    // Add user message
+                    addMessage(message);
+                    messageInput.value = '';
+                    
+                    // Show typing indicator
+                    typingIndicator.classList.add('active');
+                    
+                    // Send message to server
+                    socket.emit('sendMessage', message);
+                }
+            }
+            
+            // Handle incoming messages from server
+            socket.on('message', (response) => {
+                // Hide typing indicator
+                typingIndicator.classList.remove('active');
+                // Add system message
+                addMessage(response, false);
+            });
+
+            // Handle errors
+            socket.on('error', (error) => {
+                typingIndicator.classList.remove('active');
+                addMessage('Sorry, there was an error processing your request. Please try again.', false);
+            });
+            
+            // Add welcome message on load with a slight delay
+            setTimeout(() => {
+                addMessage("Welcome to Savingshosting support! How can we help you today?", false);
+            }, 500);
+            
+            // Event listener for the send button
+            sendButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                sendMessage();
+            });
+            
+            // Event listener for the Enter key in the input field
+            messageInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
